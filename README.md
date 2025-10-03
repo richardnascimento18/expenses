@@ -114,7 +114,7 @@ Content-Type: application/json
 {
   "status": 201,
   "version": "01.02.01",
-  "body": {
+  "data": {
     "id": "6584d589-a418-404a-8911-81348412eec7",
     "name": "Test User",
     "email": "test@email.com"

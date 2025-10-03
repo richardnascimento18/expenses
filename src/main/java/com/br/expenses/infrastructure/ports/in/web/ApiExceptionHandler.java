@@ -1,6 +1,8 @@
 package com.br.expenses.infrastructure.ports.in.web;
 
+import com.br.expenses.domain.exceptions.PageNotFoundException;
 import com.br.expenses.domain.exceptions.PasswordsDoNotCoincideException;
+import com.br.expenses.domain.exceptions.UserNotFoundException;
 import com.br.expenses.infrastructure.ports.in.web.dto.response.ApiResponseDto;
 import com.br.expenses.infrastructure.ports.in.web.dto.response.ErrorDto;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,10 +43,32 @@ public class ApiExceptionHandler {
         ApiResponseDto<Object> response = new ApiResponseDto<>(
                 HttpStatus.BAD_REQUEST.value(),
                 appVersion,
-                Map.of("error", "Passwords do not coincide", "details", ex.getMessage()),
+                Map.of("error", "PASSWORD_DO_NOT_COINCIDE", "details", ex.getMessage()),
                 Map.of()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiResponseDto<Object>> handleUserNotFound(UserNotFoundException ex) {
+        ApiResponseDto<Object> response = new ApiResponseDto<>(
+                HttpStatus.NOT_FOUND.value(),
+                appVersion,
+                Map.of("error", "USER_NOT_FOUND", "details", ex.getMessage()),
+                Map.of()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(PageNotFoundException.class)
+    public ResponseEntity<ApiResponseDto<Object>> handlePageNotFound(PageNotFoundException ex) {
+        ApiResponseDto<Object> response = new ApiResponseDto<>(
+                HttpStatus.NOT_FOUND.value(),
+                appVersion,
+                Map.of("error", "PAGE_NOT_FOUND", "details", ex.getMessage()),
+                Map.of()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @ExceptionHandler(Exception.class)
@@ -52,7 +76,7 @@ public class ApiExceptionHandler {
         ApiResponseDto<Object> response = new ApiResponseDto<>(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 appVersion,
-                Map.of("error", "Unexpected error", "details", ex.getMessage()),
+                Map.of("error", "UNEXPECTED_ERROR", "details", ex.getMessage()),
                 Map.of()
         );
 

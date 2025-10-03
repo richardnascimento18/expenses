@@ -11,10 +11,10 @@ import java.util.UUID;
 public class UserImplementation {
     @Id
     private UUID id;
-    private String name;
-    private String email;
-    private String passwordHash;
-    private List<Expense> expenses;
+    private final String name;
+    private final String email;
+    private final String passwordHash;
+    private final List<Expense> expenses;
 
     public UserImplementation(UUID id, String name, String email, String passwordHash, List<Expense> expenses) {
         this.id = id;

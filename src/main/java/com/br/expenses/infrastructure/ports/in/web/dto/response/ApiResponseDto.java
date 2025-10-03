@@ -8,21 +8,21 @@ public class ApiResponseDto<T> {
     private final int status;
     private final String version;
     private final Instant timestamp;
-    private final T body;
+    private final T data;
     private final Map<String, Link> _links;
 
-    public ApiResponseDto(int status,String version, T body, Map<String, Link> links) {
+    public ApiResponseDto(int status, String version, T data, Map<String, Link> links) {
         this.status = status;
         this.version = version;
         this.timestamp = Instant.now();
-        this.body = body;
+        this.data = data;
         this._links = links;
     }
 
     public int getStatus() { return status; }
     public String getVersion() { return version; }
     public Instant getTimestamp() { return timestamp; }
-    public T getBody() { return body; }
+    public T getData() { return data; }
     public Map<String, Link> get_links() { return _links; }
 
     public static class Link {

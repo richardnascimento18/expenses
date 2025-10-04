@@ -41,4 +41,9 @@ public class UserService implements UserServiceInterface {
         if(users.isEmpty()) throw new PageNotFoundException("USERS");
         return users;
     }
+
+    @Override
+    public void deleteById(String id) {
+        userRepository.deleteById(id);
+    }
 }

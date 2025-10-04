@@ -37,4 +37,9 @@ public class UserRepositoryImplementationAdapter implements UserRepository {
 
         return userImplementationList.stream().map(implementation -> new User(implementation.getId(), implementation.getName(), implementation.getEmail(), implementation.getPasswordHash(), implementation.getExpenses())).toList();
     }
+
+    @Override
+    public void deleteById(String id) {
+        userRepositoryImplementation.deleteById(UUID.fromString(id));
+    }
 }

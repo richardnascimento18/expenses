@@ -4,6 +4,7 @@ import com.br.expenses.application.service.UserService;
 import com.br.expenses.domain.model.User;
 import com.br.expenses.infrastructure.ports.in.web.dto.request.UserRequestDto;
 import com.br.expenses.infrastructure.ports.in.web.dto.response.ApiResponseDto;
+import com.br.expenses.infrastructure.ports.in.web.dto.response.UserDeletedResponseDto;
 import com.br.expenses.infrastructure.ports.in.web.dto.response.UserResponseDto;
 import com.br.expenses.infrastructure.ports.in.web.dto.response.UserWithExpenseResponseDto;
 import jakarta.validation.Valid;
@@ -65,6 +66,19 @@ public class UserController {
         Map<String, ApiResponseDto.Link> links = new LinkedHashMap<>();
         links.put("previous", new ApiResponseDto.Link("POST", "http://localhost:8080/users/", "create-user"));
         links.put("current", new ApiResponseDto.Link("GET", "http://localhost:8080/users/" + user.getId(), "get-user"));
+        links.put("next", new ApiResponseDto.Link("GET", "http://localhost:8080/users/{page}", "all-users"));
+
+        return new ApiResponseDto<>(200, API_VERSION, dto, links);
+    }
+
+    @DeleteMapping("/{id}")
+    public ApiResponseDto<UserDeletedResponseDto> delete(@PathVariable String id) {
+        userService.deleteById(id);
+        UserDeletedResponseDto dto = new UserDeletedResponseDto("USER_WITH_ID_" + id + "_WAS_DELETED");
+
+        Map<String, ApiResponseDto.Link> links = new LinkedHashMap<>();
+        links.put("previous", new ApiResponseDto.Link("POST", "http://localhost:8080/users/", "create-user"));
+        links.put("current", new ApiResponseDto.Link("DELETE", "http://localhost:8080/users/" + id, "delete-user"));
         links.put("next", new ApiResponseDto.Link("GET", "http://localhost:8080/users/{page}", "all-users"));
 
         return new ApiResponseDto<>(200, API_VERSION, dto, links);

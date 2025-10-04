@@ -8,4 +8,5 @@ public interface UserRepository {
     User save(User user);
     User findById(String id);
     List<User> findAll(int page);
+    void deleteById(String id);
 }

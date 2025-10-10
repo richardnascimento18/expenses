@@ -2,6 +2,7 @@ package com.br.expenses.infrastructure.model.User;
 
 import com.br.expenses.domain.model.User;
 import com.br.expenses.domain.port.out.User.UserRepository;
+import com.br.expenses.infrastructure.mapper.UserImplementationMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -12,9 +13,11 @@ import java.util.UUID;
 @Repository
 public class UserRepositoryImplementationAdapter implements UserRepository {
     private final UserRepositoryImplementation userRepositoryImplementation;
+    private final UserImplementationMapper userImplementationMapper;
 
-    public UserRepositoryImplementationAdapter(UserRepositoryImplementation userRepositoryImplementation) {
+    public UserRepositoryImplementationAdapter(UserRepositoryImplementation userRepositoryImplementation, UserImplementationMapper userImplementationMapper) {
         this.userRepositoryImplementation = userRepositoryImplementation;
+        this.userImplementationMapper = userImplementationMapper;
     }
 
     @Override
@@ -41,5 +44,19 @@ public class UserRepositoryImplementationAdapter implements UserRepository {
     @Override
     public void deleteById(String id) {
         userRepositoryImplementation.deleteById(UUID.fromString(id));
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        return userRepositoryImplementation.existsById(UUID.fromString(id));
+    }
+
+    @Override
+    public User update(String id, User user) {
+        UUID uuid = UUID.fromString(id);
+        UserImplementation existingUser = userRepositoryImplementation.findById(uuid).orElseThrow();
+        userImplementationMapper.updateImplementationFromDomain(user, existingUser);
+        UserImplementation saved = userRepositoryImplementation.save(existingUser);
+        return userImplementationMapper.toDomain(saved);
     }
 }

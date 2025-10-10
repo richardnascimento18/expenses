@@ -9,4 +9,6 @@ public interface UserRepository {
     User findById(String id);
     List<User> findAll(int page);
     void deleteById(String id);
+    boolean existsById(String id);
+    User update(String id, User user);
 }

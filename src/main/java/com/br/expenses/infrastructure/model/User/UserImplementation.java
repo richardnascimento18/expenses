@@ -11,10 +11,12 @@ import java.util.UUID;
 public class UserImplementation {
     @Id
     private UUID id;
-    private final String name;
-    private final String email;
-    private final String passwordHash;
-    private final List<Expense> expenses;
+    private String name;
+    private String email;
+    private String passwordHash;
+    private List<Expense> expenses;
+
+    public UserImplementation() {}
 
     public UserImplementation(UUID id, String name, String email, String passwordHash, List<Expense> expenses) {
         this.id = id;
@@ -28,19 +30,39 @@ public class UserImplementation {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPasswordHash() {
         return passwordHash;
     }
 
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
     public List<Expense> getExpenses() {
         return expenses;
+    }
+
+    public void setExpenses(List<Expense> expenses) {
+        this.expenses = expenses;
     }
 }

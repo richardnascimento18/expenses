@@ -6,6 +6,8 @@ import com.br.expenses.domain.exceptions.UserNotFoundException;
 import com.br.expenses.domain.model.User;
 import com.br.expenses.domain.port.out.User.UserRepository;
 import com.br.expenses.domain.port.out.User.UserServiceInterface;
+import com.br.expenses.infrastructure.mapper.UserMapper;
+import com.br.expenses.infrastructure.ports.in.web.dto.request.UserPatchRequestDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -13,10 +15,12 @@ import java.util.List;
 public class UserService implements UserServiceInterface {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -45,5 +49,13 @@ public class UserService implements UserServiceInterface {
     @Override
     public void deleteById(String id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public User update(String id, UserPatchRequestDto userPatchRequestDto) {
+        if (!userRepository.existsById(id)) throw new UserNotFoundException();
+        User currentUser = findById(id);
+        userMapper.updateUserFromDto(userPatchRequestDto, currentUser);
+        return userRepository.update(id, currentUser);
     }
 }

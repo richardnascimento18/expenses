@@ -2,6 +2,7 @@ package com.br.expenses.infrastructure.ports.in.web;
 
 import com.br.expenses.application.service.UserService;
 import com.br.expenses.domain.model.User;
+import com.br.expenses.infrastructure.ports.in.web.dto.request.UserPatchRequestDto;
 import com.br.expenses.infrastructure.ports.in.web.dto.request.UserRequestDto;
 import com.br.expenses.infrastructure.ports.in.web.dto.response.ApiResponseDto;
 import com.br.expenses.infrastructure.ports.in.web.dto.response.UserDeletedResponseDto;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -79,6 +81,19 @@ public class UserController {
         Map<String, ApiResponseDto.Link> links = new LinkedHashMap<>();
         links.put("previous", new ApiResponseDto.Link("POST", "http://localhost:8080/users/", "create-user"));
         links.put("current", new ApiResponseDto.Link("DELETE", "http://localhost:8080/users/" + id, "delete-user"));
+        links.put("next", new ApiResponseDto.Link("GET", "http://localhost:8080/users/{page}", "all-users"));
+
+        return new ApiResponseDto<>(200, API_VERSION, dto, links);
+    }
+
+    @PatchMapping("/{id}")
+    public ApiResponseDto<UserResponseDto> update(@PathVariable String id, @Valid @RequestBody UserPatchRequestDto userPatchRequestDto) {
+        User updated = userService.update(id, userPatchRequestDto);
+        UserResponseDto dto = new UserResponseDto(updated.getId(), updated.getName(), updated.getEmail());
+
+        Map<String, ApiResponseDto.Link> links = new LinkedHashMap<>();
+        links.put("previous", new ApiResponseDto.Link("POST", "http://localhost:8080/users/", "create-user"));
+        links.put("current", new ApiResponseDto.Link("PATCH", "http://localhost:8080/users/" + id, "update-user"));
         links.put("next", new ApiResponseDto.Link("GET", "http://localhost:8080/users/{page}", "all-users"));
 
         return new ApiResponseDto<>(200, API_VERSION, dto, links);
